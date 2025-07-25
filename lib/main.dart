@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shoes_app/screens/home_page.dart';
 import 'package:shoes_app/screens/on_borading.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
 
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: OnBoardingScreen(),
+      home: HomePage(),
     );
   }
 }
