@@ -3,6 +3,7 @@ import 'package:shoes_app/resources/core/on_borading_model.dart';
 import 'package:shoes_app/widgets/custom_bottom_navigation_bar.dart';
 
 import '../resources/core/on_boarding_controller.dart';
+import '../resources/core/route_management.dart';
 import '../widgets/custom_on_borading.dart';
 
 class OnBoardingScreen extends StatelessWidget {
@@ -13,16 +14,27 @@ class OnBoardingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: CustomBottomNavigationBar(
-         onTap: (){
-           controller.nextPageView(controller.onBoardindList[indexpageView] as int);
-         },
-          text: "Get Started",
-          controller: controller.controllerNavagationBar,
-          itemCount: controller.onBoardindList.length,
-          outputStream: controller.outputStream!,
-      ),
-      body: Padding(
+        bottomNavigationBar: StreamBuilder<int>(
+          stream: controller.outputStream,
+          builder: (context, snapshot) {
+            int currentIndex = snapshot.data ?? 0;
+
+            return CustomBottomNavigationBar(
+              onTap: () {
+                controller.nextPageView();
+               if(currentIndex==2){
+                 Navigator.pushReplacementNamed(context,  RouteName.homePage);
+               }
+              },
+              text: currentIndex == 0 ? "Get Started" : "Next",
+              controller: controller.controllerNavagationBar,
+              itemCount: controller.onBoardindList.length,
+              outputStream: controller.outputStream!,
+            );
+          },
+        ),
+
+        body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
@@ -32,8 +44,8 @@ class OnBoardingScreen extends StatelessWidget {
               child: PageView.builder(
                 controller: controller.controllerNavagationBar,
                   itemBuilder:(context,index){
-                   int indexpageView=index;
-                   CustomOnBoarding(
+
+                  return CustomOnBoarding(
                        image: controller.onBoardindList[index].image,
                        title2:controller.onBoardindList[index].title2,
                        title1: controller.onBoardindList[index].title1);},

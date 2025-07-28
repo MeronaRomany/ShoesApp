@@ -11,7 +11,7 @@ class OnBoardingController{
   late Sink<int>? inputStream;
   late Stream<int>? outputStream;
   OnBoardingController(){
-    streamController=StreamController();
+    streamController=StreamController<int>.broadcast();
     inputStream=streamController?.sink;
     outputStream=streamController?.stream;
     inputStream?.add(checkIndex);
@@ -32,12 +32,19 @@ class OnBoardingController{
         title1: "Amet Minim Lit Nodeseru Saku Nandu sit Alique Dolor")
   ];
 
-  int checkIndex=-1;
+  int checkIndex=0;
 
-  void nextPageView(int index){
-    if(checkIndex != index && checkIndex <index){
-      index++;
+  void nextPageView() {
+    int nextPage = checkIndex + 1;
+    if (nextPage < onBoardindList.length) {
+      controllerNavagationBar.animateToPage(
+        nextPage,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.ease,
+      );
+      checkIndex = nextPage;
+      inputStream?.add(checkIndex);
     }
-    inputStream!.add(index);
   }
+
 }

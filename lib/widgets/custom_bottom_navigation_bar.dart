@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class CustomBottomNavigationBar extends StatefulWidget {
+class CustomBottomNavigationBar extends StatelessWidget {
   const CustomBottomNavigationBar({super.key,required this.text,required this.controller,required this.itemCount,required this.outputStream,required this.onTap});
   final String text;
   final PageController controller;
@@ -9,11 +9,6 @@ class CustomBottomNavigationBar extends StatefulWidget {
   final Stream<int> outputStream;
  final GestureTapCallback onTap;
 
-  @override
-  State<CustomBottomNavigationBar> createState() => _CustomBottomNavigationBarState();
-}
-
-class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,19 +18,26 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       child: Row(
         children: [
           StreamBuilder(
-            stream: widget.outputStream,
-            builder:(context,snapshot) =>SmoothPageIndicator(
-                controller: widget.controller,  // PageController
-                count:  widget.itemCount,
-                effect:  WormEffect(),  // your preferred effect
-                onDotClicked: (index){
-                 index=snapshot.data!;
-                }
-            ),
+            stream: outputStream,
+            builder:(context,snapshot){
+              int currentIndex= snapshot.data??0;
+              return SmoothPageIndicator(
+                  controller: controller,  // PageController
+                  count:  itemCount,
+                  effect:  WormEffect(),  // your preferred effect
+                  onDotClicked: (index){
+                    controller.animateToPage(
+                        index,
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.ease);
+                  }
+              );
+            }
+
           ),
          Spacer(),
           GestureDetector(
-            onTap: widget.onTap,
+            onTap: onTap,
             child: Container(
               padding: EdgeInsets.all(2),
 
@@ -45,7 +47,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                 color: Color(0xff5B9EE1),
                 borderRadius: BorderRadius.circular(18),
               ),
-              child: Text(widget.text,
+              child: Text(text,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white,fontSize: 18),),
             ),
