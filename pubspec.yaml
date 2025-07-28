@@ -36,6 +36,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   percent_indicator: ^4.2.5
   smooth_page_indicator: ^1.2.1
+  flutter_native_splash: ^2.4.6
+  flutter_bloc: ^9.1.1
 
 dev_dependencies:
   flutter_test:

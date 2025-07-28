@@ -14,9 +14,14 @@ class OnBoardingScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       bottomNavigationBar: CustomBottomNavigationBar(
+         onTap: (){
+           controller.nextPageView(controller.onBoardindList[indexpageView] as int);
+         },
           text: "Get Started",
           controller: controller.controllerNavagationBar,
-          itemCount: controller.onBoardindList.length),
+          itemCount: controller.onBoardindList.length,
+          outputStream: controller.outputStream!,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -26,11 +31,20 @@ class OnBoardingScreen extends StatelessWidget {
             Expanded(
               child: PageView.builder(
                 controller: controller.controllerNavagationBar,
-                  itemBuilder:(context,index)=>
-                      CustomOnBoarding(image: controller.onBoardindList[index].image, title2:controller.onBoardindList[index].title2, title1: controller.onBoardindList[index].title1),
-                itemCount:controller.onBoardindList.length,
+                  itemBuilder:(context,index){
+                   int indexpageView=index;
+                   CustomOnBoarding(
+                       image: controller.onBoardindList[index].image,
+                       title2:controller.onBoardindList[index].title2,
+                       title1: controller.onBoardindList[index].title1);},
+                  itemCount:controller.onBoardindList.length,
+
               ),
-            ),
+
+
+
+              ),
+
 
           ],
         ),
