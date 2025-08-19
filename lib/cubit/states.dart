@@ -11,5 +11,6 @@ class FailState extends ProductState{
 }
 class SuccessState extends ProductState{
   List<ShoesProduct> products=[];
+
   SuccessState({required this.products});
 }

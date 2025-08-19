@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cubit/cubit_prodect.dart';
 import '../cubit/states.dart';
+import '../model/shoesProduct.dart';
 import '../widgets/custom_list_view_home_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,6 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isSeeAllProdect =false;
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -32,7 +34,7 @@ class _HomePageState extends State<HomePage> {
             );
           }
           else if (state is SuccessState) {
-            // final products = state.products;
+
            return Scaffold(
               backgroundColor: Color(0xfff8f9fa),
               body: ListView(
@@ -136,13 +138,13 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         Text(
                                           state.products[index].title,
-                                          style: TextStyle(fontSize: 16,
+                                          style: TextStyle(fontSize: 14,
                                               fontWeight: FontWeight.bold,
                                               color: Color(0xff5B9EE1)),
                                         ),
                                         Text(
-                                          state.products[index].brand,
-                                          style: TextStyle(fontSize: 16,
+                                          state.products[index].shortDescription,
+                                          style: TextStyle(fontSize: 12,
                                               fontWeight: FontWeight.bold),
                                         ),
                                         const Spacer(),
@@ -150,7 +152,7 @@ class _HomePageState extends State<HomePage> {
                                           children: [
                                             Text(
                                               "${state.products[index]
-                                                  .brand}\$",
+                                                  .price}\$",
                                               style: TextStyle(fontSize: 16,
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -263,7 +265,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             SizedBox(height: 5,),
                             ListView.builder(
-                              itemCount: isSeeAllProdect ? 3 : 1,
+                              itemCount: isSeeAllProdect ? state.products.length : 1,
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) =>
@@ -292,20 +294,20 @@ class _HomePageState extends State<HomePage> {
                                           spacing: 5,
                                           children: [
 
-                                            Text("Best Seller", maxLines: 2,
+                                            Text(state.products[index].title, maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(fontSize: 18,
                                                   color: Color(0xff5B9EE1)),),
-                                            Text("Nike Jordan", maxLines: 2,
+                                            Text(state.products[index].description, maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(fontSize: 18),),
-                                            Text("40\$", maxLines: 2,
+                                              style: TextStyle(fontSize: 10),),
+                                            Text("${state.products[index].price}\$", maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(fontSize: 18),),
                                           ],),
                                         Spacer(),
-                                        Image.asset(
-                                          "assets/images/Digital Sketches_prev_ui.png",
+                                        Image.network(
+                                          state.products[index].image,
                                           height: 120,),
                                       ],
                                     ),
