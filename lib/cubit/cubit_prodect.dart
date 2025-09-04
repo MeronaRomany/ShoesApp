@@ -4,13 +4,17 @@ import 'package:dio/dio.dart';
 
 import '../model/shoesProduct.dart';
 class ProductsCubit extends Cubit<ProductState>{
-  ProductsCubit():super(InitialState());
+  ProductsCubit():super(InitialProductState());
 
    List<ShoesProduct> products=[];
-
+   bool isActive=false;
+   List<String> optionsSize=["uk","ex","gu"];
+   int selectIndexSize=0;
+  int selectIndexSizelistView=0;
+  List<String> optionsSizelistView=["30","35","40","42","45","48"];
 
   Future<void> getProduct()async{
-    emit(LogInState());
+    emit(LoadProductState());
    try {
      var response= await Dio().get('https://shoes-collections.p.rapidapi.com/shoes',
          options: Options(
@@ -25,15 +29,24 @@ class ProductsCubit extends Cubit<ProductState>{
       products = data.map((item) {
        return ShoesProduct.fromJson(item as Map<String,dynamic>);
      }).toList();
-      emit(SuccessState(products: products));
+      emit(SuccessProductState(products: products));
    } catch (e) {
 
-     emit(FailState(message: e.toString()));
+     emit(FailProductState(message: e.toString()));
 
    }
 
   }
 
 
+ void changeSelectedIndex(int index){
+   selectIndexSize=index;
 
+  emit(SizeSelectedSystemState(selectedSystemIndex:selectIndexSize ));
+ }
+
+  void changeSelectedIndexlistView(int index){
+    selectIndexSizelistView=index;
+   emit(SelectedSizeState(selectedSizeIndex:selectIndexSizelistView ));
+  }
 }

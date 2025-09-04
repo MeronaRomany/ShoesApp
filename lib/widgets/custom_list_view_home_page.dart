@@ -16,7 +16,7 @@ class _CustomListViewHomePageState extends State<CustomListViewHomePage> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 80,
-      width: 400,
+      width: 380,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemBuilder: (context,index)=>

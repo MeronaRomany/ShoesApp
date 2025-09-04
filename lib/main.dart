@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shoes_app/resources/core/route_management.dart';
 import 'package:shoes_app/screens/home_page.dart';
 import 'package:shoes_app/screens/on_borading.dart';
 
+import 'cubit/cubit_cart_products.dart';
+import 'cubit/cubit_prodect.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiBlocProvider(
+        providers:[
+        BlocProvider(
+        create: (context)=>ProductsCubit()..getProduct(),
+        ),
+          BlocProvider(
+            create: (context)=>CubitCartProduct(),
+          ),
+        ],
+        child: const MyApp()),
+
+      );
 }
 
 class MyApp extends StatelessWidget {

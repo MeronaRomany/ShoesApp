@@ -15,9 +15,9 @@ class CustumItemComponanetListview extends StatelessWidget {
         ),
         curve: Curves.easeIn,
         duration:Duration(milliseconds: 5) ,
-        margin: EdgeInsets.all(10),
+        margin: EdgeInsets.all(5),
         padding:  EdgeInsets.all(5),
-        width: isAnimate?120:60,
+        width: isAnimate?100:60,
         child: isAnimate?
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
