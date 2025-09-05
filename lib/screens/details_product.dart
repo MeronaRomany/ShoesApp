@@ -6,6 +6,7 @@ import '../cubit/cubit_cart_products.dart';
 import '../cubit/cubit_prodect.dart';
 import '../cubit/states.dart';
 import '../model/shoesProduct.dart';
+import '../resources/core/route_management.dart';
 
 class DetailsProduct extends StatelessWidget {
   const DetailsProduct({super.key});
@@ -141,11 +142,10 @@ class DetailsProduct extends StatelessWidget {
                         itemCount: cubit.optionsSizelistView.length,
                         itemBuilder: (context, index){
                           bool isSelected = cubit.selectIndexSizelistView==index;
-
-
                           return GestureDetector(
                             onTap: () {
                               cubit.changeSelectedIndexlistView(index);
+                              // String? size=cubit.isSelectSize();
                             },
                             child: CustomListViewSizeShoes(
                               backgroundContainer:isSelected
@@ -179,9 +179,10 @@ class DetailsProduct extends StatelessWidget {
                     Spacer(),
                     GestureDetector(
                       onTap: (){
-                        context.read<CubitCartProduct>().addProduct(product);
-                        // context.read<CubitCartProduct>().addPriceProduct(product);
+                        final cubit = context.read<ProductsCubit>();
 
+                        context.read<CubitCartProduct>().addProduct(product);
+                       // Navigator.pushReplacementNamed(context, RouteName.CartProducts,arguments:cubit.selectSize );
                       },
                       child: Container(
                         height: 60,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shoes_app/cubit/cubit_brands_homePage.dart';
+import 'package:shoes_app/cubit/cubit_isSeeAllProduct.dart';
 import 'package:shoes_app/resources/core/route_management.dart';
 import 'package:shoes_app/screens/home_page.dart';
 import 'package:shoes_app/screens/on_borading.dart';
@@ -16,6 +18,12 @@ void main() {
         ),
           BlocProvider(
             create: (context)=>CubitCartProduct(),
+          ),
+          BlocProvider(
+            create: (context)=>BrandsCubit(),
+          ),
+          BlocProvider(
+            create: (context)=>SeeAllProduct(),
           ),
         ],
         child: const MyApp()),

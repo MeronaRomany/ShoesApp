@@ -12,6 +12,7 @@ class ProductsCubit extends Cubit<ProductState>{
    int selectIndexSize=0;
   int selectIndexSizelistView=0;
   List<String> optionsSizelistView=["30","35","40","42","45","48"];
+  String? selectSize;
 
   Future<void> getProduct()async{
     emit(LoadProductState());
@@ -47,6 +48,18 @@ class ProductsCubit extends Cubit<ProductState>{
 
   void changeSelectedIndexlistView(int index){
     selectIndexSizelistView=index;
+    selectSize=isSelectSize();
    emit(SelectedSizeState(selectedSizeIndex:selectIndexSizelistView ));
   }
+  String? isSelectSize(){
+    if(selectIndexSizelistView ==0 || selectIndexSizelistView == 1){
+      return "L";
+    }else if(selectIndexSizelistView == 2 || selectIndexSizelistView == 3){
+      return "XL";
+    }else{
+      return "XXL";
+    }
+  }
+
+
 }

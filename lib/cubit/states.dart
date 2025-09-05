@@ -30,7 +30,7 @@ class SuccessProductState extends ProductState {
   List<Object?> get props => [products];
 }
 
-
+/////////////////////////////////////////////////////////////////
 
 /// --------------------
 /// States خاصة بالـ CubitCartProduct
@@ -66,7 +66,7 @@ class SuccessCartProductState extends CartProductState {
 }
 
 
-
+///////////////////////////////////////////////////////////////////////////////
 class SizeSelectedSystemState extends ProductState with EquatableMixin {
   final int selectedSystemIndex;
   SizeSelectedSystemState({required this.selectedSystemIndex});
@@ -82,4 +82,61 @@ class SelectedSizeState extends ProductState with EquatableMixin{
   SelectedSizeState({required this.selectedSizeIndex});
   List<Object?> get props => [selectedSizeIndex];
 
+}
+
+abstract class BrandsState extends Equatable{
+
+  List<Object?> get props => [];
+}
+class InitialBrandsState extends BrandsState {}
+
+class SuccessBrandState extends BrandsState with EquatableMixin{
+  int selectedIndex ;
+   SuccessBrandState({required this.selectedIndex});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [selectedIndex];
+}
+
+// abstract class IsSeeAllProductState extends Equatable{
+//   List<Object?> get props=>[];
+//
+// }
+// class InitialIsSeeAllProductState extends IsSeeAllProductState{
+//
+// }
+// class SuccessIsSeeAllProductState extends IsSeeAllProductState with EquatableMixin{
+//   bool isSeeAllProductGridView ;
+//   bool isSeeAllProductListView;
+//
+//   SuccessIsSeeAllProductState({required this.isSeeAllProductGridView,required this.isSeeAllProductListView});
+//
+// }
+
+
+
+abstract class IsSeeAllProductState {
+  final bool isSeeAllProductGridView;
+  final bool isSeeAllProductListView;
+
+  const IsSeeAllProductState({
+    required this.isSeeAllProductGridView,
+    required this.isSeeAllProductListView,
+  });
+}
+
+class InitialIsSeeAllProductState extends IsSeeAllProductState {
+  const InitialIsSeeAllProductState()
+      : super(isSeeAllProductGridView: false, isSeeAllProductListView: false);
+}
+
+class SuccessIsSeeAllProductState extends IsSeeAllProductState {
+  const SuccessIsSeeAllProductState({
+    required bool isSeeAllProductGridView,
+    required bool isSeeAllProductListView,
+  }) : super(
+    isSeeAllProductGridView: isSeeAllProductGridView,
+    isSeeAllProductListView: isSeeAllProductListView,
+  );
 }

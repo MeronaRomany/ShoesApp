@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 
 class CustumItemComponanetListview extends StatelessWidget {
-  const CustumItemComponanetListview({super.key,required this.isAnimate,required this.onTap});
+  const CustumItemComponanetListview({
+    super.key,required this.isAnimate,
+    required this.onTap,
+  required this.image,
+  required this.title});
  final bool isAnimate;
  final GestureTapCallback onTap;
+ final String? image;
+ final String? title;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -24,14 +30,15 @@ class CustumItemComponanetListview extends StatelessWidget {
           children: [
             CircleAvatar(
               backgroundColor: Colors.white,
-              child: Icon(Icons.sports_baseball_rounded,color: Colors.black,),
+              child: Image.asset(image!),
+
             ),
-            Text("data"),
+            Text(title!),
 
           ],
         ):CircleAvatar(
           backgroundColor: Colors.white,
-          child: Icon(Icons.sports_baseball_rounded,color: Colors.black,),
+          child: Image.asset(image!),
         )
       ),
     );

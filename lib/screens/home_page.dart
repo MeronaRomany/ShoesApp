@@ -3,21 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cubit/cubit_cart_products.dart';
+import '../cubit/cubit_isSeeAllProduct.dart';
 import '../cubit/cubit_prodect.dart';
 import '../cubit/states.dart';
 import '../model/shoesProduct.dart';
 import '../resources/core/route_management.dart';
 import '../widgets/custom_list_view_home_page.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  bool isSeeAllProdect = false;
 
   @override
   Widget build(BuildContext context) {
@@ -125,17 +119,19 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Spacer(),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isSeeAllProdect = !isSeeAllProdect;
-                      });
-                    },
-                    child: Text(
-                      "see all",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Color(0xff5B9EE1),
+                  BlocBuilder<SeeAllProduct,IsSeeAllProductState>(
+                    builder:(context,state)=>
+
+                        GestureDetector(
+                      onTap: () {
+                       context.read<SeeAllProduct>().toggleGridView();
+                      },
+                      child: Text(
+                        "see all",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color(0xff5B9EE1),
+                        ),
                       ),
                     ),
                   ),
@@ -146,7 +142,8 @@ class _HomePageState extends State<HomePage> {
               BlocConsumer<ProductsCubit, ProductState>(
                 listener: (context, state) {},
                 builder: (context, state) {
-                  if (state is LoadProductState) {
+                  final cubit= context.read<ProductsCubit>();
+                  if (state is LoadProductState && cubit.products.isEmpty) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (state is FailProductState) {
                     return Center(
@@ -155,216 +152,224 @@ class _HomePageState extends State<HomePage> {
                         style: const TextStyle(color: Colors.red),
                       ),
                     );
-                  } else if (state is SuccessProductState) {
-                    return Column(
-                      children: [
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount:
-                              isSeeAllProdect
-                                  ? state.products.length
-                                  : state.products.length > 2
-                                  ? 2
-                                  : state.products.length,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 8,
-                                mainAxisSpacing: 8,
-                                childAspectRatio: 3 / 4,
-                              ),
-                          itemBuilder:
-                              (context, index) => GestureDetector(
-                                onTap: (){
-                                  final product = state.products[index];
-                                  print("Selected product: ${product.title}");
-                                  Navigator.pushNamed(context, RouteName.DetailsProduct,arguments:product );
-                                  print("Selected product: ${product.shortDescription}");
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withAlpha(40),
-                                        blurRadius: 5,
-                                        spreadRadius: 5,
-                                        offset: const Offset(-1, 0),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Image.network(
-                                        state.products[index].image,
-                                        height: 100,
-                                        width: double.infinity,
-                                        fit: BoxFit.contain,
-                                      ),
-                                      Text(
-                                        state.products[index].title,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xff5B9EE1),
-                                        ),
-                                      ),
-                                      Text(
-                                        state.products[index].shortDescription,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Spacer(),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "${state.products[index].price}\$",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          const Spacer(),
-                                          Align(
-                                            alignment: Alignment.bottomRight,
-                                            child: Container(
-                                              decoration: const BoxDecoration(
-                                                color: Color(0xff5B9EE1),
-                                                borderRadius: BorderRadius.only(
-                                                  bottomRight: Radius.circular(
-                                                    20,
-                                                  ),
-                                                ),
-                                              ),
-                                              child: IconButton(
-                                                icon: const Icon(
-                                                  Icons.add,
-                                                  size: 20,
-                                                  color: Colors.white,
-                                                ),
-                                                onPressed: () {
-                                                   context.read<CubitCartProduct>().addProduct(state.products[index]);
-                                                   //context.read<CubitCartProduct>().addPriceProduct(state.products[index]);
+                  } else if (cubit.products.isNotEmpty) {
+                    return
+                      BlocBuilder<SeeAllProduct, IsSeeAllProductState>(
+                        builder: (context, state) {
+                          final cubit = context.read<ProductsCubit>();
 
-                                                },
-                                              ),
-                                            ),
+                          // bool isGridView = false;
+                          // bool isListView = false;
+                          //
+                          // // نتأكد إن الحالة Success عشان نقدر نوصل للقيم
+                          // if (state is SuccessIsSeeAllProductState) {
+                          //   isGridView = state.isSeeAllProductGridView;
+                          //   isListView = state.isSeeAllProductListView;
+                          // }
+
+                          return Column(
+                            children: [
+                              // ✅ GridView
+                              GridView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: state.isSeeAllProductGridView
+                                    ? cubit.products.length
+                                    : (cubit.products.length > 2 ? 2 : cubit.products.length),
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 8,
+                                  mainAxisSpacing: 8,
+                                  childAspectRatio: 3 / 4,
+                                ),
+                                itemBuilder: (context, index) {
+                                  final product = cubit.products[index];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        RouteName.DetailsProduct,
+                                        arguments: product,
+                                      );
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withAlpha(40),
+                                            blurRadius: 5,
+                                            spreadRadius: 5,
+                                            offset: const Offset(-1, 0),
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Text(
-                              "New Arrivals",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  isSeeAllProdect = !isSeeAllProdect;
-                                });
-                              },
-                              child: Text(
-                                "see all",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Color(0xff5B9EE1),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        ListView.builder(
-                          itemCount:
-                              isSeeAllProdect
-                                  ? state.products.length
-                                  : (state.products.isNotEmpty ? 1 : 0),
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder:
-                              (context, index) => Container(
-                                margin: EdgeInsets.all(10),
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withAlpha(40),
-                                      blurRadius: 5,
-                                      spreadRadius: 5,
-                                      offset: const Offset(-1, 0),
-                                    ),
-                                  ],
-                                ),
-
-                                child: Row(
-                                  children: [
-                                    Expanded(
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        spacing: 5,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
+                                          Image.network(
+                                            product.image,
+                                            height: 100,
+                                            width: double.infinity,
+                                            fit: BoxFit.contain,
+                                          ),
                                           Text(
-                                            state.products[index].title,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontSize: 12,
+                                            product.title,
+                                            style: const TextStyle(
+                                              fontSize: 14,
                                               fontWeight: FontWeight.bold,
                                               color: Color(0xff5B9EE1),
                                             ),
                                           ),
                                           Text(
-                                            state
-                                                .products[index]
-                                                .shortDescription,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(fontSize: 12),
+                                            product.shortDescription,
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
-                                          Text(
-                                            "${state.products[index].price}\$",
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(fontSize: 18),
+                                          const Spacer(),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "${product.price}\$",
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const Spacer(),
+                                              Align(
+                                                alignment: Alignment.bottomRight,
+                                                child: Container(
+                                                  decoration: const BoxDecoration(
+                                                    color: Color(0xff5B9EE1),
+                                                    borderRadius: BorderRadius.only(
+                                                      bottomRight: Radius.circular(20),
+                                                    ),
+                                                  ),
+                                                  child: IconButton(
+                                                    icon: const Icon(
+                                                      Icons.add,
+                                                      size: 20,
+                                                      color: Colors.white,
+                                                    ),
+                                                    onPressed: () {
+                                                      context
+                                                          .read<CubitCartProduct>()
+                                                          .addProduct(product);
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
                                     ),
-                                    SizedBox(width: 8),
-                                    Image.network(
-                                      state.products[index].image,
-                                      height: 120,
-                                    ),
-                                  ],
-                                ),
+                                  );
+                                },
                               ),
-                        ),
-                      ],
-                    );
+
+                              const SizedBox(height: 10),
+
+                              // ✅ New Arrivals
+                              Row(
+                                children: [
+                                  const Text(
+                                    "New Arrivals",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      context.read<SeeAllProduct>().toggleListView();
+                                    },
+                                    child: const Text(
+                                      "see all",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Color(0xff5B9EE1),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              // ✅ ListView
+                              ListView.builder(
+                                itemCount: state.isSeeAllProductListView
+                                    ? cubit.products.length
+                                    : (cubit.products.isNotEmpty ? 1 : 0),
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  final product = cubit.products[index];
+                                  return Container(
+                                    margin: const EdgeInsets.all(10),
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withAlpha(40),
+                                          blurRadius: 5,
+                                          spreadRadius: 5,
+                                          offset: const Offset(-1, 0),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                product.title,
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xff5B9EE1),
+                                                ),
+                                              ),
+                                              Text(
+                                                product.shortDescription,
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(fontSize: 12),
+                                              ),
+                                              Text(
+                                                "${product.price}\$",
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(fontSize: 18),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Image.network(product.image, height: 120),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+
                   } else {
-                    return const SizedBox();
+                    return const Center(child: Text("No products found"));
                   }
                 },
               ),

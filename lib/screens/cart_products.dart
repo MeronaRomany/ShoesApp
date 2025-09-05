@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cubit/cubit_cart_products.dart';
+import '../cubit/cubit_prodect.dart';
 import '../cubit/states.dart';
 import '../model/shoesProduct.dart';
 
@@ -11,7 +12,7 @@ class CartProducts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final product = ModalRoute.of(context)!.settings.arguments as ShoesProduct;
+    // final product = ModalRoute.of<ProductsCubit>(context)?.settings.arguments ;
 
     return Scaffold(
       appBar: AppBar(
@@ -118,7 +119,7 @@ class CartProducts extends StatelessWidget {
                               Column(
                                spacing: 30,
                                 children: [
-                                  Text("xxl", style: TextStyle(fontSize: 18)),
+                                  Text( "${context.read<ProductsCubit>().selectSize}", style: TextStyle(fontSize: 18)),
                                   IconButton(
                                     onPressed: () {
                                       cubit.removeProduct(
