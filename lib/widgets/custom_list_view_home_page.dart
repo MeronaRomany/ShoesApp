@@ -26,13 +26,13 @@ class CustomListViewHomePage extends StatelessWidget {
               builder:
                   (context, state) =>
                       CustumItemComponanetListview(
-                    isAnimate: cubit.selectedIndex==index,
-                    onTap: () {
+                                          isAnimate: cubit.selectedIndex==index,
+                                          onTap: () {
                       cubit.isSelectAnimate(index);
-                    },
+                                          },
                         image:brandeShoes.optionsBrandeShoes[index].image ,
                         title: brandeShoes.optionsBrandeShoes[index].title,
-                  ),
+                                        ),
 
             ),
       ),

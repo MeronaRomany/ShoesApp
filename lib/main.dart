@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shoes_app/cubit/cubit_brands_homePage.dart';
 import 'package:shoes_app/cubit/cubit_isSeeAllProduct.dart';
 import 'package:shoes_app/resources/core/route_management.dart';
-import 'package:shoes_app/screens/home_page.dart';
+import 'package:shoes_app/screens/first_page.dart';
 import 'package:shoes_app/screens/on_borading.dart';
 
 import 'cubit/cubit_cart_products.dart';
